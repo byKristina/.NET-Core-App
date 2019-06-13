@@ -6,9 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Commands.RolesCommands
+namespace Application.Commands.UsersCommands
 {
-    public interface IGetRolesCommand : ICommand<RoleSearch, PagedResponse<RoleDto>>
-    {        
+    public interface IGetUsersCommand : ICommand<UserSearch, PagedResponse<UserDto>>
+    {
+
     }
 }

@@ -40,7 +40,7 @@ namespace Blog.API.Controllers
         }
 
         // GET: api/Categories/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
@@ -100,7 +100,7 @@ namespace Blog.API.Controllers
             }
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Categories/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

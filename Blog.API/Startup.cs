@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Commands.CategoriesCommands;
+using Application.Commands.RolesCommands;
+using Application.Commands.UsersCommands;
 using DataAccess;
 using EfCommands.CategoryCommands;
+using EfCommands.RoleCommands;
+using EfCommands.UserCommands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +39,19 @@ namespace Blog.API
             services.AddTransient<IAddCategoryCommand, EfAddCategoryCommand>();
             services.AddTransient<IEditCategoryCommand, EfEditCategoryCommand>();
             services.AddTransient<IDeleteCategoryCommand, EfDeleteCategoryCommand>();
+
+            services.AddTransient<IGetRolesCommand, EfGetRolesCommand>();
+            services.AddTransient<IGetRoleCommand, EfGetRoleCommand>();
+            services.AddTransient<IAddRoleCommand, EfAddRoleCommand>();
+            services.AddTransient<IEditRoleCommand, EfEditRoleCommand>();
+            services.AddTransient<IDeleteRoleCommand, EfDeleteRoleCommand>();
+
+           
+            services.AddTransient<IGetUserCommand, EfGetUserCommand>();
+            services.AddTransient<IGetUsersCommand, EfGetUsersCommand>();
+            services.AddTransient<IAddUserCommand, EfAddUserCommand>();
+            services.AddTransient<IEditUserCommand, EfEditUserCommand>();
+            services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

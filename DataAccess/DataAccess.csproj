@@ -10,6 +10,7 @@
     <Compile Remove="Migrations\20190613122447_fix database.cs" />
     <Compile Remove="Migrations\20190613122847_small fix for database.cs" />
     <Compile Remove="Migrations\20190613123530_small_fix.cs" />
+    <Compile Remove="Migrations\20190613175039_addedd.cs" />
   </ItemGroup>
 
   <ItemGroup>

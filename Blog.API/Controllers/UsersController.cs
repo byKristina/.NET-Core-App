@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Application.Commands.RolesCommands;
+using Application.Commands.UsersCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
@@ -13,15 +13,15 @@ namespace Blog.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RolesController : ControllerBase
+    public class UsersController : ControllerBase
     {
-        private readonly IGetRolesCommand _getCommand;
-        private readonly IGetRoleCommand _getOneCommand;
-        private readonly IAddRoleCommand _addCommand;
-        private readonly IEditRoleCommand _editCommand;
-        private readonly IDeleteRoleCommand _deleteCommand;
+        private readonly IGetUsersCommand _getCommand;
+        private readonly IGetUserCommand _getOneCommand;
+        private readonly IAddUserCommand _addCommand;
+        private readonly IEditUserCommand _editCommand;
+        private readonly IDeleteUserCommand _deleteCommand;
 
-        public RolesController(IGetRolesCommand getCommand, IGetRoleCommand getOneCommand, IAddRoleCommand addCommand, IEditRoleCommand editCommand, IDeleteRoleCommand deleteCommand)
+        public UsersController(IGetUsersCommand getCommand, IGetUserCommand getOneCommand, IAddUserCommand addCommand, IEditUserCommand editCommand, IDeleteUserCommand deleteCommand)
         {
             _getCommand = getCommand;
             _getOneCommand = getOneCommand;
@@ -30,17 +30,15 @@ namespace Blog.API.Controllers
             _deleteCommand = deleteCommand;
         }
 
-
-
-        // GET: api/Roles
+        // GET: api/Users
         [HttpGet]
-        public IActionResult Get([FromQuery] RoleSearch search)
+        public IActionResult Get([FromQuery] UserSearch search)
         {
             var result = _getCommand.Execute(search);
             return Ok(result);
         }
 
-        // GET: api/Roles/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -59,9 +57,9 @@ namespace Blog.API.Controllers
             }
         }
 
-        // POST: api/Roles
+        // POST: api/Users
         [HttpPost]
-        public IActionResult Post([FromBody] RoleDto dto)
+        public IActionResult Post([FromBody] UserDto dto)
         {
             try
             {
@@ -78,9 +76,9 @@ namespace Blog.API.Controllers
             }
         }
 
-        // PUT: api/Roles/5
+        // PUT: api/Users/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] RoleDto dto)
+        public IActionResult Put(int id, [FromBody]  UserDto dto)
         {
             try
             {
@@ -101,7 +99,7 @@ namespace Blog.API.Controllers
             }
         }
 
-        // DELETE: api/Roles/5
+        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
