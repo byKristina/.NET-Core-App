@@ -15,13 +15,12 @@ namespace DataAccess.Configurations
             builder.Property(u => u.FirstName).HasMaxLength(30).IsRequired();
             builder.Property(u => u.LastName).HasMaxLength(30).IsRequired();
             builder.Property(u => u.Email).HasMaxLength(50).IsRequired();
-          //builder.Property(u => u.Password).IsRequired();
+            builder.Property(u => u.Password).IsRequired();
             builder.Property(u => u.Username).HasMaxLength(20).IsRequired();
 
             builder.HasIndex(u => u.Email).IsUnique();
             builder.HasIndex(u => u.Username).IsUnique();
 
-            //builder.Property(u => u.Password).IsRequired();
             //builder.Property(u => u.Token).IsRequired();
 
             builder.Property(u => u.CreatedAt).HasDefaultValueSql("GETDATE()");

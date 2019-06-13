@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Commands.CategoriesCommands;
+using Application.Commands.CommentsCommands;
+using Application.Commands.PostsCommands;
 using Application.Commands.RolesCommands;
 using Application.Commands.UsersCommands;
 using DataAccess;
 using EfCommands.CategoryCommands;
+using EfCommands.CommentCommands;
+using EfCommands.PostCommands;
 using EfCommands.RoleCommands;
 using EfCommands.UserCommands;
 using Microsoft.AspNetCore.Builder;
@@ -52,6 +56,19 @@ namespace Blog.API
             services.AddTransient<IAddUserCommand, EfAddUserCommand>();
             services.AddTransient<IEditUserCommand, EfEditUserCommand>();
             services.AddTransient<IDeleteUserCommand, EfDeleteUserCommand>();
+
+
+            services.AddTransient<IGetPostCommand, EfGetPostCommand>();
+            services.AddTransient<IGetPostsCommand, EfGetPostsCommand>();
+            services.AddTransient<IAddPostCommand, EfAddPostCommand>();
+            services.AddTransient<IEditPostCommand, EfEditPostCommand>();
+            services.AddTransient<IDeletePostCommand, EfDeletePostCommand>();
+
+            services.AddTransient<IGetCommentCommand, EfGetCommentCommand>();
+            services.AddTransient<IGetCommentsCommand, EfGetCommentsCommand>();
+            services.AddTransient<IAddCommentCommand, EfAddCommentCommand>();
+            services.AddTransient<IEditCommentCommand, EfEditCommentCommand>();
+            services.AddTransient<IDeleteCommentCommand, EfDeleteCommentCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
