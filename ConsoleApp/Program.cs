@@ -9,7 +9,7 @@ namespace ConsoleApp
         {
             var context = new BlogContext();
 
-            context.Users.Add(new Category
+            context.Categories.Add(new Category
                 {
                     Name = "Category 1",
                    

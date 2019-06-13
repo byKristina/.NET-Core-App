@@ -11,6 +11,8 @@ namespace DataAccess.Configurations
 
         public void Configure(EntityTypeBuilder<Post> builder)
         {
+            builder.ToTable("Posts");
+
             builder.Property(r => r.Title).HasMaxLength(60).IsRequired();
             builder.HasIndex(r => r.Title).IsUnique();
 

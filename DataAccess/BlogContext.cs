@@ -8,11 +8,11 @@ namespace DataAccess
 {
     public class BlogContext : DbContext
     {
-        public DbSet<Category> Roles { get; set; }
-        public DbSet<Category> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Category> Posts { get; set; }
-        public DbSet<Category> Comments { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

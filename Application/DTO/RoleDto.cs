@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Application.DTO
 {
-    public class CategoryDto
+    public class RoleDto
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "This field is required")]
-        [MinLength(4, ErrorMessage = "Category name must be 4 characters or longer")]
+        [Required(ErrorMessage ="This field is required")]
         public string Name { get; set; }
+        public IEnumerable<string> Users { get; set; }
     }
 }

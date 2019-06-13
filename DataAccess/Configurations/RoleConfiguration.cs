@@ -10,6 +10,8 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
+            builder.ToTable("Roles");
+
             builder.Property(r => r.Name).HasMaxLength(20).IsRequired();
             builder.HasIndex(r => r.Name).IsUnique();
 

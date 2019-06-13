@@ -7,6 +7,9 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190613010943_Initial.cs" />
     <Compile Remove="Migrations\20190613011319_Initial.cs" />
+    <Compile Remove="Migrations\20190613122447_fix database.cs" />
+    <Compile Remove="Migrations\20190613122847_small fix for database.cs" />
+    <Compile Remove="Migrations\20190613123530_small_fix.cs" />
   </ItemGroup>
 
   <ItemGroup>

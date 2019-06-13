@@ -10,6 +10,8 @@ namespace DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.ToTable("Users");
+
             builder.Property(u => u.FirstName).HasMaxLength(30).IsRequired();
             builder.Property(u => u.LastName).HasMaxLength(30).IsRequired();
             builder.Property(u => u.Email).HasMaxLength(50).IsRequired();
