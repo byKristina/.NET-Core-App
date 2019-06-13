@@ -1,5 +1,6 @@
 ﻿using Application.Commands.CategoriesCommands;
 using Application.DTO;
+using Application.Responses;
 using Application.Searches;
 using DataAccess;
 using System;
@@ -15,7 +16,7 @@ namespace EfCommands.CategoryCommands
         {
         }
 
-        public IEnumerable<CategoryDto> Execute(CategorySearch request)
+        public PagedResponse<CategoryDto> Execute(CategorySearch request)
         {
             var query = Context.Categories.AsQueryable();
 
@@ -31,11 +32,29 @@ namespace EfCommands.CategoryCommands
             else
                 query = query.Where(c => c.IsDeleted == false);
 
-            return query.Select(c => new CategoryDto
+
+            var totalCount = query.Count();
+
+            query = query.Skip((request.PageNumber - 1) * request.PerPage).Take(request.PerPage);
+
+
+            var pagesCount = (int)Math.Ceiling((double)totalCount / request.PerPage);
+
+
+            var response = new PagedResponse<CategoryDto>
             {
-                Id = c.Id,
-                Name = c.Name
-            });
+                CurrentPage = request.PageNumber,
+                TotalCount = totalCount,
+                PagesCount = pagesCount,
+                Data = query.Select(p => new CategoryDto
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                })
+            };
+
+            return response;
+
         }
     }
 }
