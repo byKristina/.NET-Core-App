@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Domain;
 using System;
 
 namespace ConsoleApp
@@ -9,15 +10,15 @@ namespace ConsoleApp
         {
             var context = new BlogContext();
 
-            //context.Categories.Add(new Category
-            //    {
-            //        Name = "Category 1",
+            context.Categories.Add(new Category
+            {
+                Name = "Category 1",
 
-            //    });
+            });
 
             context.Users.Add(new User
             {
-              FirstName = "Novi",
+              FirstName = "JOhn",
               LastName = "Doe",
               Username = "johndoe3",
               Password = "pass123",

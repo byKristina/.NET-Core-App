@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataAccess
+namespace Domain
 {
-    public class Role : BaseEntity
+    public class Category : BaseEntity
     {
         public string Name { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        public ICollection<Post> Posts { get; set; }
+
     }
 }
