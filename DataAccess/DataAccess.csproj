@@ -11,6 +11,13 @@
     <Compile Remove="Migrations\20190613122847_small fix for database.cs" />
     <Compile Remove="Migrations\20190613123530_small_fix.cs" />
     <Compile Remove="Migrations\20190613175039_addedd.cs" />
+    <Compile Remove="Migrations\20190615220619_add_relations.cs" />
+    <Compile Remove="Migrations\20190615230013_Added_relation_User_Comments.cs" />
+    <Compile Remove="Migrations\20190615230409_Added_relation_User_Comments.cs" />
+    <Compile Remove="Migrations\20190615230723_Added_relation_User_Comments.cs" />
+    <Compile Remove="Migrations\20190616080420_added_relation_comment_post.cs" />
+    <Compile Remove="Migrations\20190616080457_added_relation_comment_user.cs" />
+    <Compile Remove="Migrations\20190616082613_added_relation_comment_user.cs" />
   </ItemGroup>
 
   <ItemGroup>

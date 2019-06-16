@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Application.Commands.UsersCommands
 {
-    public interface IGetUsersCommand : ICommand<UserSearch, PagedResponse<UserDto>>
+    public interface IGetUsersCommand : ICommand<UserSearch, PagedResponse<GetUserDto>>
     {
 
     }

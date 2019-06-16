@@ -21,8 +21,11 @@ namespace DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Comment>()
+              .HasOne(p => p.User)
+              .WithMany(b => b.Comments)
+              .OnDelete(DeleteBehavior.Restrict);
 
-          
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());

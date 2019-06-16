@@ -16,6 +16,7 @@ namespace DataAccess.Configurations
 
             builder.Property(c => c.CreatedAt).HasDefaultValueSql("GETDATE()");
 
+
         }
     }
 }

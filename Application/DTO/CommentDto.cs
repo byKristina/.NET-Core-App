@@ -13,9 +13,9 @@ namespace Application.DTO
         [MinLength(4, ErrorMessage = "Comment must be 4 characters or longer")]
         [MaxLength(150, ErrorMessage = "Comment must be max 150 characters")]
         public string Text { get; set; }
-
+        [Required(ErrorMessage = "This field is required")]
         public int UserId { get; set; }
-
+        [Required(ErrorMessage = "This field is required")]
         public int PostId { get; set; }
     }
 }

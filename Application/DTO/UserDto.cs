@@ -40,5 +40,6 @@ namespace Application.DTO
 
         [Required]
         public int RoleId { get; set; }
+
     }
 }

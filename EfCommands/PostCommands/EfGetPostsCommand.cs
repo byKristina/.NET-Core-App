@@ -16,7 +16,7 @@ namespace EfCommands.PostCommands
         {
         }
 
-        public PagedResponse<PostDto> Execute(PostSearch request)
+        public PagedResponse<GetPostDto> Execute(PostSearch request)
         {
             var query = Context.Posts.AsQueryable();
 
@@ -51,18 +51,19 @@ namespace EfCommands.PostCommands
             var pagesCount = (int)Math.Ceiling((double)totalCount / request.PerPage);
 
 
-            var response = new PagedResponse<PostDto>
+            var response = new PagedResponse<GetPostDto>
             {
                 CurrentPage = request.PageNumber,
                 TotalCount = totalCount,
                 PagesCount = pagesCount,
-                Data = query.Select(p => new PostDto
+                Data = query.Select(p => new GetPostDto
                 {
                     Id = p.Id,
                     Title = p.Title,
                     Content = p.Content,
-                    UserId = p.UserId,
-                    CategoryId = p.CategoryId
+                    User = p.User.FirstName + " " + p.User.LastName,
+                    Category = p.Category.Name,
+                    PostedOn = p.CreatedAt
 
                 })
             };

@@ -17,7 +17,7 @@ namespace EfCommands.CommentCommands
         {
         }
 
-        public PagedResponse<CommentDto> Execute(CommentSearch request)
+        public PagedResponse<GetCommentDto> Execute(CommentSearch request)
         {
             var query = Context.Comments.AsQueryable();
 
@@ -47,18 +47,18 @@ namespace EfCommands.CommentCommands
             var pagesCount = (int)Math.Ceiling((double)totalCount / request.PerPage);
 
 
-            var response = new PagedResponse<CommentDto>
+            var response = new PagedResponse<GetCommentDto>
             {
                 CurrentPage = request.PageNumber,
                 TotalCount = totalCount,
                 PagesCount = pagesCount,
-                Data = query.Select(c => new CommentDto
+                Data = query.Select(c => new GetCommentDto
                 {
                     Id = c.Id,
-                    Text = c.Text,
-                    UserId = c.UserId,
-                    PostId = c.PostId
-
+                    Comment = c.Text,
+                    User = c.User.Username,
+                    Post = c.Post.Title,
+                  
                 })
             };
 

@@ -16,7 +16,7 @@ namespace EfCommands.UserCommands
         {
         }
 
-        public PagedResponse<UserDto> Execute(UserSearch request)
+        public PagedResponse<GetUserDto> Execute(UserSearch request)
         {
             var query = Context.Users.AsQueryable();
 
@@ -54,20 +54,19 @@ namespace EfCommands.UserCommands
             var pagesCount = (int)Math.Ceiling((double)totalCount / request.PerPage);
 
 
-            var response = new PagedResponse<UserDto>
+            var response = new PagedResponse<GetUserDto>
             {
                 CurrentPage = request.PageNumber,
                 TotalCount = totalCount,
                 PagesCount = pagesCount,
-                Data = query.Select(u => new UserDto
+                Data = query.Select(u => new GetUserDto
                 {
                     Id = u.Id,
                     FirstName = u.FirstName,
                     LastName = u.LastName,
                     Email = u.Email,
                     Username = u.Username,
-                    Password = u.Password,
-                    RoleId = u.RoleId,
+                    Role = u.Role.Name
                   
                 })
             };

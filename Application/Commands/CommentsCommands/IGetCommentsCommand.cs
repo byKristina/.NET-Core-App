@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Application.Commands.CommentsCommands
 {
-    public interface IGetCommentsCommand : ICommand<CommentSearch, PagedResponse<CommentDto>>
+    public interface IGetCommentsCommand : ICommand<CommentSearch, PagedResponse<GetCommentDto>>
     {
     }
 }
