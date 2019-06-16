@@ -7,6 +7,8 @@ using Application.Commands.CommentsCommands;
 using Application.Commands.PostsCommands;
 using Application.Commands.RolesCommands;
 using Application.Commands.UsersCommands;
+using Application.Interfaces;
+using Blog.API.Email;
 using DataAccess;
 using EfCommands.CategoryCommands;
 using EfCommands.CommentCommands;
@@ -69,6 +71,14 @@ namespace Blog.API
             services.AddTransient<IAddCommentCommand, EfAddCommentCommand>();
             services.AddTransient<IEditCommentCommand, EfEditCommentCommand>();
             services.AddTransient<IDeleteCommentCommand, EfDeleteCommentCommand>();
+
+            var section = Configuration.GetSection("Email");
+
+            var sender =
+                new SmtpEmailSender(section["host"], Int32.Parse(section["port"]), section["fromaddress"], section["password"]);
+
+            services.AddSingleton<IEmailSender>(sender);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

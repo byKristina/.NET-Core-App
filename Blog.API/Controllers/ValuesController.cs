@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -10,11 +11,22 @@ namespace Blog.API.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+
+        private IEmailSender _sender;
+
+        public ValuesController(IEmailSender sender)
+        {
+            _sender = sender;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public void Get(string email)
         {
-            return new string[] { "value1", "value2" };
+            _sender.Subject = "Registration";
+            _sender.ToEmail = email;
+            _sender.Body = "You have successfully registered!";
+            _sender.Send();
         }
 
         // GET api/values/5

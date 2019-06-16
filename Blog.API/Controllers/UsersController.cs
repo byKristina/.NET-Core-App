@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Application.Commands.UsersCommands;
 using Application.DTO;
 using Application.Exceptions;
+using Application.Interfaces;
 using Application.Searches;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +21,18 @@ namespace Blog.API.Controllers
         private readonly IAddUserCommand _addCommand;
         private readonly IEditUserCommand _editCommand;
         private readonly IDeleteUserCommand _deleteCommand;
+        private readonly IEmailSender _sender;
 
-        public UsersController(IGetUsersCommand getCommand, IGetUserCommand getOneCommand, IAddUserCommand addCommand, IEditUserCommand editCommand, IDeleteUserCommand deleteCommand)
+        public UsersController(IGetUsersCommand getCommand, IGetUserCommand getOneCommand, IAddUserCommand addCommand, IEditUserCommand editCommand, IDeleteUserCommand deleteCommand, IEmailSender sender)
         {
             _getCommand = getCommand;
             _getOneCommand = getOneCommand;
             _addCommand = addCommand;
             _editCommand = editCommand;
             _deleteCommand = deleteCommand;
+            _sender = sender;
         }
+
 
         // GET: api/Users
         [HttpGet]
@@ -64,6 +68,12 @@ namespace Blog.API.Controllers
             try
             {
                 _addCommand.Execute(dto);
+
+                _sender.Subject = "Registration";
+                _sender.ToEmail = dto.Email;
+                _sender.Body = "You have successfully registered!";
+                _sender.Send();
+
                 return StatusCode(201);
             }
             catch (EntityAlreadyExistsException)
