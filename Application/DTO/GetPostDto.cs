@@ -16,6 +16,8 @@ namespace Application.DTO
       
         public string User { get; set; }
 
+        public string ImagePath { get; set; }
+
         public DateTime PostedOn { get; set; }
 
     }

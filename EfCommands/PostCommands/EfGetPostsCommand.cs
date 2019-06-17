@@ -66,6 +66,7 @@ namespace EfCommands.PostCommands
                     Id = p.Id,
                     Title = p.Title,
                     Content = p.Content,
+                    ImagePath = p.ImagePath,
                     User = p.User.FirstName + " " + p.User.LastName,
                     Category = p.Category.Name,
                     PostedOn = p.CreatedAt

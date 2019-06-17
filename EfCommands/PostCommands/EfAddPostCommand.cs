@@ -37,9 +37,11 @@ namespace EfCommands.PostCommands
             {
                
                 Title = request.Title,
+                ImagePath = request.ImagePath,
                 Content = request.Content,
                 UserId = request.UserId,
                 CategoryId = request.CategoryId,
+                               
             };
 
             Context.Posts.Add(newPost);

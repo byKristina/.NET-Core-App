@@ -14,10 +14,12 @@ namespace DataAccess.Configurations
         {
             builder.ToTable("Posts");
 
-            builder.Property(r => r.Title).HasMaxLength(60).IsRequired();
-            builder.HasIndex(r => r.Title).IsUnique();
+            builder.Property(p => p.Title).HasMaxLength(60).IsRequired();
+            builder.HasIndex(p => p.Title).IsUnique();
 
-            builder.Property(r => r.Content).IsRequired();
+            builder.Property(p => p.Content).IsRequired();
+            builder.Property(p => p.ImagePath).IsRequired();
+
 
             builder.Property(r => r.CreatedAt).HasDefaultValueSql("GETDATE()");
         }

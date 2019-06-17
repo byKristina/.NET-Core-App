@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Application.Commands.CategoriesCommands;
 using Application.Commands.CommentsCommands;
 using Application.Commands.PostsCommands;
@@ -22,8 +19,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Blog.API
@@ -106,6 +101,7 @@ namespace Blog.API
             }
 
             app.UseMvc();
+            app.UseStaticFiles();
 
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

@@ -25,11 +25,13 @@ namespace EfCommands.PostCommands
             {
                 Id = post.Id,
                 Title = post.Title,
+                ImagePath = post.ImagePath,
                 Content = post.Content,
                 UserId = post.UserId,
-                CategoryId = post.CategoryId
-           
-        };
+                CategoryId = post.CategoryId,
+                PostedOn = post.CreatedAt
+
+            };
         }
     }
 }

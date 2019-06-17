@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Application.Commands.PostsCommands;
 using Application.DTO;
 using Application.Exceptions;
+using Application.Helpers;
 using Application.Searches;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -85,25 +89,53 @@ namespace Blog.API.Controllers
         /// Creates new post.
         /// </summary>
         /// <response code="201">Adds new post</response>
+        /// <response code="404">If some of the items doesn't exist</response>
         /// <response code="409">If post already exist</response>
         /// <response code="500">If server error occurred</response>
         [HttpPost]
-        public ActionResult Post([FromBody] PostDto dto)
+        public ActionResult Post([FromForm] PostDto dto)
         {
+
+            var ext = Path.GetExtension(dto.Image.FileName); //.jpg etc.
+
+            if (!FileUpload.AllowedExtensions.Contains(ext))
+            {
+                return UnprocessableEntity("Image extension is not allowed.");
+            }
+
+
             try
             {
-                _addCommand.Execute(dto);
+                var newFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
+
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
+
+                dto.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                var post = new PostDto
+                {
+                     Id = dto.Id,
+                     Title = dto.Title,
+                     Content = dto.Content,
+                     ImagePath = newFileName,
+                     CategoryId = dto.CategoryId,
+                     UserId = dto.UserId
+                };
+
+                _addCommand.Execute(post);
                 return StatusCode(201);
+
+                }
+                catch (EntityAlreadyExistsException e)
+                {
+                    return Conflict(e.Message);
+                }
+                catch (Exception)
+                {
+                    return StatusCode(500, "Server error has occurred.");
+                }
+
             }
-            catch (EntityAlreadyExistsException e)
-            {
-                return Conflict(e.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Server error has occurred.");
-            }
-        }
 
         // PUT: api/Posts/5
         /// <summary>
@@ -114,14 +146,49 @@ namespace Blog.API.Controllers
         /// <response code="409">If post already exists</response>
         /// <response code="500">If server error occurred</response>
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] PostDto dto)
+        public ActionResult Put(int id, [FromForm] PostDto dto)
         {
             dto.Id = id;
+
             try
             {
-                _editCommand.Execute(dto);
-                return NoContent();
+                //if image changed 
+                if (dto.Image != null)
+                {
+                    var extension = Path.GetExtension(dto.Image.FileName);
+
+                    if (!FileUpload.AllowedExtensions.Contains(extension))
+                    {
+                        return UnprocessableEntity("Image extension is not allowed.");
+                    }
+
+                    var newFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
+
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
+
+                    dto.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+
+
+                    var post = new PostDto
+                    {
+                        Id = dto.Id,
+                        Title = dto.Title,
+                        Content = dto.Content,
+                        ImagePath = newFileName,
+                        CategoryId = dto.CategoryId,
+                        UserId = dto.UserId
+                    };
+                    _editCommand.Execute(post);
+                    return NoContent();
+                }
+                else {
+                   
+                    _editCommand.Execute(dto);
+                    return NoContent();
+                }
+                
             }
+
             catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
@@ -130,12 +197,11 @@ namespace Blog.API.Controllers
             {
                 return Conflict(e.Message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return StatusCode(500, "Server error has occurred.");
+                return StatusCode(500, e.Message);
             }
         }
-
 
         // DELETE: api/Posts/5
         /// <summary>
