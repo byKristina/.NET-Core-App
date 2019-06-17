@@ -19,7 +19,7 @@ namespace EfCommands.RoleCommands
         public void Execute(RoleDto request)
         {
             if (Context.Roles.Any(r => r.Name == request.Name)) {
-                throw new EntityAlreadyExistsException();
+                throw new EntityAlreadyExistsException("Role");
             }
 
             Role newRole = new Role

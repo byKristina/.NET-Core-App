@@ -17,16 +17,25 @@ namespace EfCommands.CommentCommands
 
         public void Execute(CommentDto request)
         {
-            var one = Context.Comments.Find(request.Id);
+            var comment = Context.Comments.Find(request.Id);
 
-            if (one == null || one.IsDeleted == true)
-                throw new EntityNotFoundException();
+            if (comment == null || comment.IsDeleted == true)
+                throw new EntityNotFoundException("Comment");
 
+            if (!Context.Users.Any(c => c.Id == request.UserId))
+            {
+                throw new EntityNotFoundException("User");
+            }
 
-            one.Text = request.Text;
-            one.UserId = request.UserId;
-            one.PostId = request.PostId;
-            one.ModifiedAt = DateTime.Now;
+            if (!Context.Posts.Any(c => c.Id == request.PostId))
+            {
+                throw new EntityNotFoundException("Post");
+            }
+
+            comment.Text = request.Text;
+            comment.UserId = request.UserId;
+            comment.PostId = request.PostId;
+            comment.ModifiedAt = DateTime.Now;
 
             Context.SaveChanges();
 

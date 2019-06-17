@@ -18,7 +18,7 @@ namespace EfCommands.PostCommands
             var one = Context.Users.Find(request);
 
             if (one == null || one.IsDeleted == true)
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException("Post");
 
             one.IsDeleted = true;
 

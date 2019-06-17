@@ -1,5 +1,6 @@
 ﻿using Application.Commands.CommentsCommands;
 using Application.DTO;
+using Application.Exceptions;
 using Application.Responses;
 using Application.Searches;
 using DataAccess;
@@ -29,18 +30,22 @@ namespace EfCommands.CommentCommands
                 query = query.Where(c => c.IsDeleted == false);
 
 
-            if (request.UserId != null)
+            if (request.UserId.HasValue)
             {
-                query = query.Where(r => r.UserId == request.UserId);
+                if (!Context.Comments.Any(c => c.Id == request.UserId))
+                    throw new EntityNotFoundException("User");
+                query = query.Where(c => c.UserId == request.UserId);
             }
 
-            if (request.PostId != null)
+            if (request.PostId.HasValue)
             {
-                query = query.Where(r => r.PostId == request.PostId);
+                if (!Context.Comments.Any(c => c.Id == request.PostId))
+                    throw new EntityNotFoundException("Post");
+                query = query.Where(c => c.PostId == request.PostId);
             }
 
-        
-             return  query.Select(c => new GetCommentDto
+
+            return query.Select(c => new GetCommentDto
                 {
                     Id = c.Id,
                     Comment = c.Text,

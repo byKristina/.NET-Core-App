@@ -20,21 +20,26 @@ namespace EfCommands.UserCommands
             var one = Context.Users.Find(request.Id);
 
             if (one == null || one.IsDeleted == true)
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException("User");
 
             if (one.Email != request.Email)
             {
                    if (Context.Users.Any(u => u.Email == request.Email))
                 {
-                    throw new EntityAlreadyExistsException();
+                    throw new EntityAlreadyExistsException("Email");
                 }
             }
             if (one.Username != request.Username)
             {
                    if (Context.Users.Any(u => u.Username == request.Username))
                {
-                    throw new EntityAlreadyExistsException();
+                    throw new EntityAlreadyExistsException("Username");
                }
+            }
+
+            if (!Context.Roles.Any(r => r.Id == request.RoleId))
+            {
+                throw new EntityNotFoundException("Role");
             }
 
             one.FirstName = request.FirstName;

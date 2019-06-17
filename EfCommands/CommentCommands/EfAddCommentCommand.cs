@@ -18,7 +18,17 @@ namespace EfCommands.CommentCommands
 
         public void Execute(CommentDto request)
         {
-           
+
+            if (!Context.Users.Any(r => r.Id == request.UserId))
+            {
+                throw new EntityNotFoundException("User");
+            }
+
+            if (!Context.Posts.Any(r => r.Id == request.PostId))
+            {
+                throw new EntityNotFoundException("Post");
+            }
+
             Comment comment = new Comment
             {
                 Text = request.Text,

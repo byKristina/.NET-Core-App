@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Commands.PostsCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -30,87 +27,135 @@ namespace Blog.API.Controllers
             _deleteCommand = deleteCommand;
         }
 
-        // GET: api/Posts
-        [HttpGet]
-        public IActionResult Get([FromQuery] PostSearch search)
-        {
-            var result = _getCommand.Execute(search);
-            return Ok(result);
-        }
 
-        // GET: api/Posts/5
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+
+        // GET: api/Posts
+        /// <summary>
+        /// Returns all posts (that match provided query).
+        /// </summary>
+        /// <response code="200">Returns all posts (that match provided query)</response>
+        /// <response code="404">If posts don't exist</response>
+        /// <response code="500">If server error occurred</response>
+        [HttpGet]
+        public ActionResult<IEnumerable<GetPostDto>> Get([FromQuery] PostSearch search)
         {
             try
             {
-                var one = _getOneCommand.Execute(id);
-                return Ok(one);
+                var posts = _getCommand.Execute(search);
+                return Ok(posts);
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
+        // GET: api/Posts/5
+        /// <summary>
+        /// Gets one post by ID.
+        /// </summary>
+        /// <response code="200">Gets one post by ID</response>
+        /// <response code="404">If post doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
+        [HttpGet("{id}")]
+        public ActionResult Get(int id)
+        {
+            try
+            {
+                var post = _getOneCommand.Execute(id);
+                return Ok(post);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Server error has occurred.");
+            }
+        }
+
+
         // POST: api/Posts
+        /// <summary>
+        /// Creates new post.
+        /// </summary>
+        /// <response code="201">Adds new post</response>
+        /// <response code="409">If post already exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPost]
-        public IActionResult Post([FromBody] PostDto dto)
+        public ActionResult Post([FromBody] PostDto dto)
         {
             try
             {
                 _addCommand.Execute(dto);
                 return StatusCode(201);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // PUT: api/Posts/5
+        /// <summary>
+        /// Edits post.
+        /// </summary>
+        /// <response code="204">Edits post</response>
+        /// <response code="404">If some of the items doesn't exist</response>
+        /// <response code="409">If post already exists</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] PostDto dto)
+        public ActionResult Put(int id, [FromBody] PostDto dto)
         {
+            dto.Id = id;
             try
             {
                 _editCommand.Execute(dto);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
-        // DELETE: api/ApiWithActions/5
+
+        // DELETE: api/Posts/5
+        /// <summary>
+        /// Deletes one post by ID.
+        /// </summary>
+        /// <param name="id"></param>        
+        /// <response code="204">Deletes one post by ID</response>
+        /// <response code="404">If post doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
             try
             {
                 _deleteCommand.Execute(id);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception)
             {

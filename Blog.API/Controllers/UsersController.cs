@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Commands.UsersCommands;
 using Application.DTO;
 using Application.Exceptions;
-using Application.Interfaces;
 using Application.Searches;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -21,110 +17,153 @@ namespace Blog.API.Controllers
         private readonly IAddUserCommand _addCommand;
         private readonly IEditUserCommand _editCommand;
         private readonly IDeleteUserCommand _deleteCommand;
-        private readonly IEmailSender _sender;
 
-        public UsersController(IGetUsersCommand getCommand, IGetUserCommand getOneCommand, IAddUserCommand addCommand, IEditUserCommand editCommand, IDeleteUserCommand deleteCommand, IEmailSender sender)
+        public UsersController(IGetUsersCommand getCommand, IGetUserCommand getOneCommand, IAddUserCommand addCommand, IEditUserCommand editCommand, IDeleteUserCommand deleteCommand)
         {
             _getCommand = getCommand;
             _getOneCommand = getOneCommand;
             _addCommand = addCommand;
             _editCommand = editCommand;
             _deleteCommand = deleteCommand;
-            _sender = sender;
         }
-
 
         // GET: api/Users
+        /// <summary>
+        /// Returns all users (that match provided query).
+        /// </summary>
+        /// <response code="200">Returns all users (that match provided query)</response>
+        /// <response code="404">If users don't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpGet]
-        public IActionResult Get([FromQuery] UserSearch search)
+        public ActionResult<IEnumerable<GetUserDto>> Get([FromQuery] UserSearch search)
         {
-            var result = _getCommand.Execute(search);
-            return Ok(result);
+            try
+            {
+                var users = _getCommand.Execute(search);
+                return Ok(users);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Server error has occurred.");
+            }
         }
 
+
         // GET: api/Users/5
+        /// <summary>
+        /// Gets one user by ID.
+        /// </summary>
+        /// <response code="200">Gets one user by ID</response>
+        /// <response code="404">If user doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public ActionResult Get(int id)
         {
             try
             {
                 var one = _getOneCommand.Execute(id);
                 return Ok(one);
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // POST: api/Users
+        /// <summary>
+        /// Creates new user.
+        /// </summary>
+        /// <response code="201">Adds new user</response>
+        /// <response code="404">If some of the items don't exist</response>
+        /// <response code="409">If user already exists</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPost]
-        public IActionResult Post([FromBody] UserDto dto)
+        public ActionResult Post([FromBody] UserDto dto)
         {
             try
             {
                 _addCommand.Execute(dto);
 
-                _sender.Subject = "Registration";
-                _sender.ToEmail = dto.Email;
-                _sender.Body = "You have successfully registered!";
-                _sender.Send();
-
                 return StatusCode(201);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityNotFoundException e)
             {
-                return Conflict();
+                return NotFound(e.Message);
+            }
+            catch (EntityAlreadyExistsException e)
+            {
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // PUT: api/Users/5
+        /// <summary>
+        /// Edits user.
+        /// </summary>
+        /// <response code="204">Edits user</response>
+        /// <response code="404">If some of the items don't exist</response>
+        /// <response code="409">If user already exists</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]  UserDto dto)
+        public ActionResult Put(int id, [FromBody]  UserDto dto)
         {
+            dto.Id = id;
             try
             {
                 _editCommand.Execute(dto);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
-        // DELETE: api/ApiWithActions/5
+
+        // DELETE: api/Users/5
+        /// <summary>
+        /// Deletes one user by ID.
+        /// </summary>
+        /// <param name="id"></param>        
+        /// <response code="204">Deletes one user by ID</response>
+        /// <response code="404">If user doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
             try
             {
                 _deleteCommand.Execute(id);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
     }

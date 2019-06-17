@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Application.Commands.PostsCommands;
 using Application.DTO;
+using Application.Exceptions;
 using Application.Responses;
 using Application.Searches;
 using DataAccess;
@@ -33,14 +34,18 @@ namespace EfCommands.PostCommands
                 query = query.Where(c => c.IsDeleted == false);
 
 
-            if (request.CategoryId != null)
+            if (request.UserId.HasValue)
             {
-                query = query.Where(r => r.CategoryId == request.CategoryId);
+                if (!Context.Users.Any(r => r.Id == request.UserId))
+                    throw new EntityNotFoundException("User");
+                query = query.Where(p => p.UserId == request.UserId);
             }
 
-            if (request.UserId != null)
+            if (request.CategoryId.HasValue)
             {
-                query = query.Where(r => r.CategoryId == request.UserId);
+                if (!Context.Categories.Any(r => r.Id == request.CategoryId))
+                    throw new EntityNotFoundException("Category");
+                query = query.Where(p => p.CategoryId == request.CategoryId);
             }
 
             var totalCount = query.Count();

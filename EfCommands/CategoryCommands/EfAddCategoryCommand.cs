@@ -19,7 +19,7 @@ namespace EfCommands.CategoryCommands
         public void Execute(CategoryDto request)
         {
             if (Context.Categories.Any(c => c.Name == request.Name)) {
-                throw new EntityAlreadyExistsException();
+                throw new EntityAlreadyExistsException("Category");
             }
 
             Category newCategory = new Category

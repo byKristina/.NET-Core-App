@@ -1,6 +1,7 @@
 ﻿using Application.Commands.UsersCommands;
 using Application.DTO;
 using Application.Exceptions;
+using Application.Interfaces;
 using DataAccess;
 using Domain;
 using System;
@@ -12,19 +13,28 @@ namespace EfCommands.UserCommands
 {
     public class EfAddUserCommand : BaseEfCommand, IAddUserCommand
     {
-        public EfAddUserCommand(BlogContext context) : base(context)
+
+        private readonly IEmailSender _emailSender;
+
+        public EfAddUserCommand(BlogContext context, IEmailSender _emailSender) : base(context)
         {
+            this._emailSender = _emailSender;
         }
 
         public void Execute(UserDto request)
         {
             if (Context.Users.Any(u => u.Username == request.Username))
             {
-                throw new EntityAlreadyExistsException();
+                throw new EntityAlreadyExistsException("Username");
             }
             if (Context.Users.Any(u => u.Email == request.Email))
             {
-                throw new EntityAlreadyExistsException();
+                throw new EntityAlreadyExistsException("Email");
+            }
+
+            if (!Context.Roles.Any(r => r.Id == request.RoleId))
+            {
+                throw new EntityNotFoundException("Role");
             }
 
             User user = new User
@@ -40,6 +50,13 @@ namespace EfCommands.UserCommands
             Context.Users.Add(user);
 
             Context.SaveChanges();
+
+            _emailSender.Subject = "Registration";
+            _emailSender.ToEmail = request.Email;
+            _emailSender.Body = "You have successfully registered!";
+            _emailSender.Send();
+
+
         }
     }
 }

@@ -20,16 +20,16 @@ namespace EfCommands.CategoryCommands
             var category = Context.Categories.Find(request.Id);
 
             if (category == null || category.IsDeleted == true)
-                throw new EntityNotFoundException();
+                throw new EntityNotFoundException("Category");
 
-            if (category.Name != request.Name)
+            if (category.Name == request.Name)
             {
-                category.Name = request.Name;
-                category.ModifiedAt = DateTime.Now;
-                Context.SaveChanges();
+                throw new EntityAlreadyExistsException("Name");
             }
-            else
-                throw new EntityAlreadyExistsException();
+           
+            category.Name = request.Name;
+            category.ModifiedAt = DateTime.Now;
+            Context.SaveChanges();
         }
     }
 }

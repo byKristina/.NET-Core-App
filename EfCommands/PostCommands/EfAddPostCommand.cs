@@ -20,9 +20,18 @@ namespace EfCommands.PostCommands
         {
             if (Context.Posts.Any(p => p.Title == request.Title))
             {
-                throw new EntityAlreadyExistsException();
+                throw new EntityAlreadyExistsException("Post title");
             }
 
+            if (!Context.Categories.Any(r => r.Id == request.CategoryId))
+            {
+                throw new EntityNotFoundException("Category");
+            }
+
+            if (!Context.Users.Any(r => r.Id == request.UserId))
+            {
+                throw new EntityNotFoundException("User");
+            }
 
             Post newPost = new Post
             {

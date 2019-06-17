@@ -19,16 +19,19 @@ namespace EfCommands.RoleCommands
             var one = Context.Roles.Find(request.Id);
 
             if (one == null || one.IsDeleted == true)
-                throw new EntityNotFoundException();
+            {
+                throw new EntityNotFoundException("Role");
+            }
 
             if (one.Name == request.Name)
-                throw new EntityAlreadyExistsException();
+            {
+                throw new EntityAlreadyExistsException("Name");
+            }
 
                 one.Name = request.Name;
                 one.ModifiedAt = DateTime.Now;
                 Context.SaveChanges();
-            
-      
+
         }
     }
 }

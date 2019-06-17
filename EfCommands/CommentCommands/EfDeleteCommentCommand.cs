@@ -18,7 +18,9 @@ namespace EfCommands.CommentCommands
             var one = Context.Comments.Find(request);
 
             if (one == null || one.IsDeleted == true)
-                throw new EntityNotFoundException();
+            {
+                throw new EntityNotFoundException("Comment");
+            }
 
             one.IsDeleted = true;
 

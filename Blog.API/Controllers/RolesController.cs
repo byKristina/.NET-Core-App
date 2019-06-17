@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Commands.RolesCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -31,92 +28,126 @@ namespace Blog.API.Controllers
         }
 
 
-
         // GET: api/Roles
+        /// <summary>
+        /// Returns all roles (that match provided query).
+        /// </summary>
+        /// <response code="200">Returns all roles (that match provided query)</response>
+        /// <response code="500">If server error occurred</response>
         [HttpGet]
-        public IActionResult Get([FromQuery] RoleSearch search)
+        public ActionResult<IEnumerable<RoleDto>> Get([FromQuery] RoleSearch search)
         {
             var result = _getCommand.Execute(search);
             return Ok(result);
         }
 
+
         // GET: api/Roles/5
+        /// <summary>
+        /// Gets one role by ID.
+        /// </summary>
+        /// <response code="200">Gets one role by ID</response>
+        /// <response code="404">If role doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public ActionResult Get(int id)
         {
             try
             {
                 var one = _getOneCommand.Execute(id);
                 return Ok(one);
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
+
         // POST: api/Roles
+        /// <summary>
+        /// Creates new role.
+        /// </summary>
+        /// <response code="201">Adds new role</response>
+        /// <response code="409">If role already exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPost]
-        public IActionResult Post([FromBody] RoleDto dto)
+        public ActionResult Post([FromBody] RoleDto dto)
         {
             try
             {
                 _addCommand.Execute(dto);
                 return StatusCode(201);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // PUT: api/Roles/5
+        /// <summary>
+        /// Edits role.
+        /// </summary>
+        /// <response code="204">Edits role</response>
+        /// <response code="404">If role doesn't exist</response>
+        /// <response code="409">If role already exists</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] RoleDto dto)
+        public ActionResult Put(int id, [FromBody] RoleDto dto)
         {
+            dto.Id = id;
             try
             {
                 _editCommand.Execute(dto);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
+
         // DELETE: api/Roles/5
+        /// <summary>
+        /// Deletes one role by ID.
+        /// </summary>
+        /// <param name="id"></param>        
+        /// <response code="204">Deletes one role by ID</response>
+        /// <response code="404">If role doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
             try
             {
                 _deleteCommand.Execute(id);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
     }

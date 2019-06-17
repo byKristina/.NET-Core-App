@@ -1,5 +1,6 @@
 ﻿using Application.Commands.UsersCommands;
 using Application.DTO;
+using Application.Exceptions;
 using Application.Responses;
 using Application.Searches;
 using DataAccess;
@@ -40,10 +41,12 @@ namespace EfCommands.UserCommands
             else
                 query = query.Where(c => c.IsDeleted == false);
 
-            
-            if (request.RoleId != null)
+
+            if (request.RoleId.HasValue)
             {
-                query = query.Where(r => r.RoleId == request.RoleId);
+                if (!Context.Roles.Any(r => r.Id == request.RoleId))
+                    throw new EntityNotFoundException("Role");
+                query = query.Where(u => u.RoleId == request.RoleId);
             }
 
             var totalCount = query.Count();

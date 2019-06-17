@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -31,91 +32,125 @@ namespace Blog.API.Controllers
         }
 
 
+
         // GET: api/Categories
+        /// <summary>
+        /// Returns all categories (that match provided query).
+        /// </summary>
+        /// <response code="200">Returns all categories (that match provided query)</response>
+        /// <response code="500">If server error occurred</response>
         [HttpGet]
-        public IActionResult Get([FromQuery] CategorySearch search)
+        public ActionResult<IEnumerable<CategoryDto>> Get([FromQuery] CategorySearch search)
         {
-            var result =_getCommand.Execute(search);
-            return Ok(result);
+            var categories =_getCommand.Execute(search);
+            return Ok(categories);
         }
 
+
         // GET: api/Categories/5
+        /// <summary>
+        /// Gets one category by ID.
+        /// </summary>
+        /// <response code="200">Gets one category by ID</response>
+        /// <response code="404">If category doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public ActionResult Get(int id)
         {
             try
             {
-                var one = _getOneCommand.Execute(id);
-                return Ok(one);
+                var category = _getOneCommand.Execute(id);
+                return Ok(category);
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // POST: api/Categories
+        /// <summary>
+        /// Creates new category.
+        /// </summary>
+        /// <response code="201">Adds new category</response>
+        /// <response code="409">If category already exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpPost]
-        public IActionResult Post([FromBody] CategoryDto dto)
+        public ActionResult Post([FromBody] CategoryDto dto)
         {
             try
             {
                 _addCommand.Execute(dto);
                 return StatusCode(201);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // PUT: api/Categories/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] CategoryDto dto)
+        /// <summary>
+        /// Edits category.
+        /// </summary>
+        /// <response code="204">Edits category</response>
+        /// <response code="404">If category doesn't exist</response>
+        /// <response code="409">If category already exists</response>
+        /// <response code="500">If server error occurred</response>
+         [HttpPut("{id}")]
+        public ActionResult Put(int id, [FromBody] CategoryDto dto)
         {
+            dto.Id = id;
             try
             {
                 _editCommand.Execute(dto);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
-            catch (EntityAlreadyExistsException)
+            catch (EntityAlreadyExistsException e)
             {
-                return Conflict();
+                return Conflict(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 
         // DELETE: api/Categories/5
+        /// <summary>
+        /// Deletes one category by ID.
+        /// </summary>
+        /// <param name="id"></param>        
+        /// <response code="204">Deletes one category by ID</response>
+        /// <response code="404">If category doesn't exist</response>
+        /// <response code="500">If server error occurred</response>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public ActionResult Delete(int id)
         {
             try
             {
                 _deleteCommand.Execute(id);
                 return NoContent();
             }
-            catch (EntityNotFoundException)
+            catch (EntityNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception)
             {
-                return StatusCode(500);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
     }
