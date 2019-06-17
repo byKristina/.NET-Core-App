@@ -23,12 +23,12 @@ namespace EfCommands.PostCommands
                 throw new EntityAlreadyExistsException("Post title");
             }
 
-            if (!Context.Categories.Any(r => r.Id == request.CategoryId))
+            if (!Context.Categories.Any(c => c.Id == request.CategoryId))
             {
                 throw new EntityNotFoundException("Category");
             }
 
-            if (!Context.Users.Any(r => r.Id == request.UserId))
+            if (!Context.Users.Any(u => u.Id == request.UserId))
             {
                 throw new EntityNotFoundException("User");
             }

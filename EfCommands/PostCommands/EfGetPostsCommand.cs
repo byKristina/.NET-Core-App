@@ -36,14 +36,14 @@ namespace EfCommands.PostCommands
 
             if (request.UserId.HasValue)
             {
-                if (!Context.Users.Any(r => r.Id == request.UserId))
+                if (!Context.Users.Any(u => u.Id == request.UserId))
                     throw new EntityNotFoundException("User");
                 query = query.Where(p => p.UserId == request.UserId);
             }
 
             if (request.CategoryId.HasValue)
             {
-                if (!Context.Categories.Any(r => r.Id == request.CategoryId))
+                if (!Context.Categories.Any(c => c.Id == request.CategoryId))
                     throw new EntityNotFoundException("Category");
                 query = query.Where(p => p.CategoryId == request.CategoryId);
             }

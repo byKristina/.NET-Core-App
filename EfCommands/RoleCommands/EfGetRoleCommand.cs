@@ -16,15 +16,15 @@ namespace EfCommands.RoleCommands
 
         public RoleDto Execute(int request)
         {
-            var one = Context.Roles.Find(request);
+            var role = Context.Roles.Find(request);
 
-            if (one == null || one.IsDeleted == true)
+            if (role == null || role.IsDeleted)
                 throw new EntityNotFoundException("Role");
 
             return new RoleDto
             {
-                Id = one.Id,
-                Name = one.Name
+                Id = role.Id,
+                Name = role.Name
             };
         }
     }

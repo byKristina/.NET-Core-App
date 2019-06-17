@@ -32,14 +32,14 @@ namespace EfCommands.CommentCommands
 
             if (request.UserId.HasValue)
             {
-                if (!Context.Comments.Any(c => c.Id == request.UserId))
+                if (!Context.Users.Any(u => u.Id == request.UserId))
                     throw new EntityNotFoundException("User");
                 query = query.Where(c => c.UserId == request.UserId);
             }
 
             if (request.PostId.HasValue)
             {
-                if (!Context.Comments.Any(c => c.Id == request.PostId))
+                if (!Context.Posts.Any(p => p.Id == request.PostId))
                     throw new EntityNotFoundException("Post");
                 query = query.Where(c => c.PostId == request.PostId);
             }

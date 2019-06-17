@@ -13,11 +13,11 @@ namespace EfCommands.RoleCommands
         {
         }
 
-        public void Execute(int request)
+        public void Execute(int id)
         {
-            var role = Context.Roles.Find(request);
+            var role = Context.Roles.Find(id);
 
-            if (role == null || role.IsDeleted == true)
+            if (role == null || role.IsDeleted)
                 throw new EntityNotFoundException("Role");
 
             role.IsDeleted = true;

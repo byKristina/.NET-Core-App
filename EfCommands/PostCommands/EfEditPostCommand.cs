@@ -17,9 +17,9 @@ namespace EfCommands.PostCommands
 
         public void Execute(PostDto request)
         {
-            var one = Context.Posts.Find(request.Id);
+            var post = Context.Posts.Find(request.Id);
 
-            if (one == null || one.IsDeleted == true)
+            if (post == null || post.IsDeleted)
                 throw new EntityNotFoundException("Post");
 
             if (!Context.Categories.Any(r => r.Id == request.CategoryId))
@@ -33,11 +33,11 @@ namespace EfCommands.PostCommands
             }
 
 
-            one.Title = request.Title;
-            one.Content = request.Content;
-            one.CategoryId = request.CategoryId;
-            one.UserId = request.UserId;
-            one.ModifiedAt = DateTime.Now;
+            post.Title = request.Title;
+            post.Content = request.Content;
+            post.CategoryId = request.CategoryId;
+            post.UserId = request.UserId;
+            post.ModifiedAt = DateTime.Now;
 
             Context.SaveChanges();
         }

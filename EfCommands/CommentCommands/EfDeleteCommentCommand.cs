@@ -13,16 +13,16 @@ namespace EfCommands.CommentCommands
         {
         }
 
-        public void Execute(int request)
+        public void Execute(int id)
         {
-            var one = Context.Comments.Find(request);
+            var comment = Context.Comments.Find(id);
 
-            if (one == null || one.IsDeleted == true)
+            if (comment == null || comment.IsDeleted)
             {
                 throw new EntityNotFoundException("Comment");
             }
 
-            one.IsDeleted = true;
+            comment.IsDeleted = true;
 
             Context.SaveChanges();
         }

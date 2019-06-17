@@ -19,7 +19,7 @@ namespace EfCommands.CommentCommands
         {
             var comment = Context.Comments.Find(request.Id);
 
-            if (comment == null || comment.IsDeleted == true)
+            if (comment == null || comment.IsDeleted)
                 throw new EntityNotFoundException("Comment");
 
             if (!Context.Users.Any(c => c.Id == request.UserId))

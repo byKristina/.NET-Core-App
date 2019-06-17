@@ -18,7 +18,7 @@ namespace EfCommands.PostCommands
         {
             var post = Context.Posts.Find(request);
 
-            if (post == null || post.IsDeleted == true)
+            if (post == null || post.IsDeleted)
                 throw new EntityNotFoundException("Post");
 
             return new PostDto

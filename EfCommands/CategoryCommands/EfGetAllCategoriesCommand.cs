@@ -19,9 +19,9 @@ namespace EfCommands.CategoryCommands
         {
             var query = Context.Categories.AsQueryable();
 
-            if (request.Keyword != null)
+            if (request.Name != null)
             {
-                query = query.Where(c => c.Name.ToLower().Contains(request.Keyword.ToLower()));
+                query = query.Where(c => c.Name.ToLower().Contains(request.Name.ToLower()));
             }
 
             if (request.Active.HasValue)

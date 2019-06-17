@@ -17,19 +17,19 @@ namespace EfCommands.UserCommands
 
         public void Execute(UserDto request)
         {
-            var one = Context.Users.Find(request.Id);
+            var user = Context.Users.Find(request.Id);
 
-            if (one == null || one.IsDeleted == true)
+            if (user == null || user.IsDeleted)
                 throw new EntityNotFoundException("User");
 
-            if (one.Email != request.Email)
+            if (user.Email != request.Email)
             {
                    if (Context.Users.Any(u => u.Email == request.Email))
                 {
                     throw new EntityAlreadyExistsException("Email");
                 }
             }
-            if (one.Username != request.Username)
+            if (user.Username != request.Username)
             {
                    if (Context.Users.Any(u => u.Username == request.Username))
                {
@@ -42,13 +42,13 @@ namespace EfCommands.UserCommands
                 throw new EntityNotFoundException("Role");
             }
 
-            one.FirstName = request.FirstName;
-            one.LastName = request.LastName;
-            one.Username = request.Username;
-            one.Email = request.Email;
-            one.Password = request.Password;
-            one.RoleId = request.RoleId;
-            one.ModifiedAt = DateTime.Now;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.Username = request.Username;
+            user.Email = request.Email;
+            user.Password = request.Password;
+            user.RoleId = request.RoleId;
+            user.ModifiedAt = DateTime.Now;
 
             Context.SaveChanges();
 

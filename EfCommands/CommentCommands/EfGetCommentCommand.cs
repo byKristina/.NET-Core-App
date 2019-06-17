@@ -14,19 +14,19 @@ namespace EfCommands.CommentCommands
         {
         }
 
-        public CommentDto Execute(int request)
+        public CommentDto Execute(int id)
         {
-            var one = Context.Comments.Find(request);
+            var comment = Context.Comments.Find(id);
 
-            if (one == null || one.IsDeleted == true)
+            if (comment == null || comment.IsDeleted)
                 throw new EntityNotFoundException("Comment");
 
             return new CommentDto
             {
-                Id = one.Id,
-                Text = one.Text,
-                PostId = one.PostId,
-                UserId = one.UserId,
+                Id = comment.Id,
+                Text = comment.Text,
+                PostId = comment.PostId,
+                UserId = comment.UserId,
             };
         }
     }

@@ -15,12 +15,12 @@ namespace EfCommands.UserCommands
 
         public void Execute(int request)
         {
-            var one = Context.Users.Find(request);
+            var user = Context.Users.Find(request);
 
-            if (one == null || one.IsDeleted == true)
+            if (user == null || user.IsDeleted)
                 throw new EntityNotFoundException("User");
 
-            one.IsDeleted = true;
+            user.IsDeleted = true;
 
             Context.SaveChanges();
         }

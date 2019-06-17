@@ -18,7 +18,7 @@ namespace EfCommands.UserCommands
         {
             var user = Context.Users.Find(request);
 
-            if (user == null || user.IsDeleted == true)
+            if (user == null || user.IsDeleted)
                 throw new EntityNotFoundException("User");
 
             return new UserDto

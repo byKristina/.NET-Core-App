@@ -16,20 +16,20 @@ namespace EfCommands.RoleCommands
 
         public void Execute(RoleDto request)
         {
-            var one = Context.Roles.Find(request.Id);
+            var role = Context.Roles.Find(request.Id);
 
-            if (one == null || one.IsDeleted == true)
+            if (role == null || role.IsDeleted)
             {
                 throw new EntityNotFoundException("Role");
             }
 
-            if (one.Name == request.Name)
+            if (role.Name == request.Name)
             {
                 throw new EntityAlreadyExistsException("Name");
             }
 
-                one.Name = request.Name;
-                one.ModifiedAt = DateTime.Now;
+                role.Name = request.Name;
+                role.ModifiedAt = DateTime.Now;
                 Context.SaveChanges();
 
         }

@@ -13,14 +13,16 @@ namespace EfCommands.PostCommands
         {
         }
 
-        public void Execute(int request)
+        public void Execute(int id)
         {
-            var one = Context.Users.Find(request);
+            var post = Context.Posts.Find(id);
 
-            if (one == null || one.IsDeleted == true)
+            if (post == null || post.IsDeleted)
+            {
                 throw new EntityNotFoundException("Post");
+            }
 
-            one.IsDeleted = true;
+            post.IsDeleted = true;
 
             Context.SaveChanges();
         }

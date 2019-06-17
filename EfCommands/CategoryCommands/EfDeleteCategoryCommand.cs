@@ -17,7 +17,7 @@ namespace EfCommands.CategoryCommands
         {
             var category = Context.Categories.Find(request);
 
-            if (category == null || category.IsDeleted == true)
+            if (category == null || category.IsDeleted)
                 throw new EntityNotFoundException("Category");
 
             category.IsDeleted = true;

@@ -45,10 +45,10 @@ namespace EfCommands.RoleCommands
                 CurrentPage = request.PageNumber,
                 TotalCount = totalCount,
                 PagesCount = pagesCount,
-                Data = query.Select(p => new RoleDto
+                Data = query.Select(r => new RoleDto
                 {
-                    Id = p.Id,
-                    Name = p.Name,
+                    Id = r.Id,
+                    Name = r.Name,
                 })
             };
 
