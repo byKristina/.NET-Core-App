@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using Application.Auth;
+using Application.Commands;
 using Application.Commands.CategoriesCommands;
 using Application.Commands.CommentsCommands;
 using Application.Commands.PostsCommands;
@@ -11,6 +12,7 @@ using Application.Interfaces;
 using Blog.API.Email;
 using Blog.API.Helpers;
 using DataAccess;
+using EfCommands;
 using EfCommands.CategoryCommands;
 using EfCommands.CommentCommands;
 using EfCommands.PostCommands;
@@ -95,12 +97,14 @@ namespace Blog.API
 
             //encryption
 
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
             var key = Configuration.GetSection("Encryption")["key"];
 
             var enc = new Encryption(key);
-            services.AddSingleton(enc);
-
-            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+              services.AddSingleton(enc);
+          
+            
 
             services.AddTransient(s => {
                 var http = s.GetRequiredService<IHttpContextAccessor>();
@@ -110,10 +114,11 @@ namespace Blog.API
                 try
                 {
                     var decodedString = encryption.DecryptString(value);
-                    decodedString = decodedString.Replace("\f", "");
-                  
-  
-                      var user = JsonConvert.DeserializeObject<LoggedUser>(decodedString);
+                  //   decodedString = decodedString.Replace("\f", "");
+                    decodedString = decodedString.Substring(0, decodedString.LastIndexOf("}") + 1);
+
+
+                    var user = JsonConvert.DeserializeObject<LoggedUser>(decodedString);
                     user.IsLogged = true;
                     return user;
                 }
@@ -126,6 +131,7 @@ namespace Blog.API
                 }
             });
 
+            services.AddTransient<IAuthCommand, EfAuthCommand>();
 
         }
 

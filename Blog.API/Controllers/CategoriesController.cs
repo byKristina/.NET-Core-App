@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Application.Auth;
 using Application.Commands.CategoriesCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
 using Blog.API.Helpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
 {
-   
+
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -45,7 +42,8 @@ namespace Blog.API.Controllers
         /// </summary>
         /// <response code="200">Returns all categories (that match provided query)</response>
         /// <response code="500">If server error occurred</response>
-        [LoggedIn]
+        /// <response code="401">If user is not Admin</response>
+        [LoggedIn("Admin")]
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> Get([FromQuery] CategorySearch search)
         {
