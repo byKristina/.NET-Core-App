@@ -54,7 +54,7 @@ namespace Blog.API.Controllers
         public IActionResult Decode(string value)
         {
             var decodedString = _enc.DecryptString(value);
-            decodedString = decodedString.Replace("\f", "");
+            decodedString = decodedString.Substring(0, decodedString.LastIndexOf("}") + 1);
             var user = JsonConvert.DeserializeObject<LoggedUser>(decodedString);
 
             return null;

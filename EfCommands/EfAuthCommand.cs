@@ -26,7 +26,7 @@ namespace EfCommands
                 .FirstOrDefault();
 
 
-            if (user == null)
+            if (user == null || user.IsDeleted)
                 throw new EntityNotFoundException("User");
 
             return new LoggedUser

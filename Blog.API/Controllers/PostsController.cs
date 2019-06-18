@@ -8,6 +8,7 @@ using Application.Exceptions;
 using Application.Helpers;
 using Application.Searches;
 using Blog.API.DTO;
+using Blog.API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -92,6 +93,8 @@ namespace Blog.API.Controllers
         /// <response code="404">If some of the items doesn't exist</response>
         /// <response code="409">If post already exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpPost]
         public ActionResult Post([FromForm] PostImageDto dto)
         {
@@ -151,6 +154,8 @@ namespace Blog.API.Controllers
         /// <response code="404">If some of the items doesn't exist</response>
         /// <response code="409">If post already exists</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromForm] PostImageDto dto)
         {
@@ -216,6 +221,8 @@ namespace Blog.API.Controllers
         /// <response code="204">Deletes one post by ID</response>
         /// <response code="404">If post doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

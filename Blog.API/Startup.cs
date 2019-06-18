@@ -114,7 +114,6 @@ namespace Blog.API
                 try
                 {
                     var decodedString = encryption.DecryptString(value);
-                  //   decodedString = decodedString.Replace("\f", "");
                     decodedString = decodedString.Substring(0, decodedString.LastIndexOf("}") + 1);
 
 

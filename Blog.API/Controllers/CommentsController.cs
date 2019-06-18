@@ -4,6 +4,7 @@ using Application.Commands.CommentsCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
+using Blog.API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -36,6 +37,7 @@ namespace Blog.API.Controllers
         /// <response code="200">Returns all comments (that match provided query)</response>
         /// <response code="404">If comments don't exist</response>
         /// <response code="500">If server error occurred</response>
+        
         [HttpGet]
         public ActionResult<IEnumerable<GetCommentDto>> Get([FromQuery] CommentSearch search)
         {
@@ -88,7 +90,8 @@ namespace Blog.API.Controllers
         /// <response code="201">Adds new comment</response>
         /// <response code="404">If some of the items don't exist</response>
         /// <response code="500">If server error occurred</response>
-
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpPost]
         public ActionResult Post([FromBody] CommentDto dto)
         {
@@ -114,6 +117,8 @@ namespace Blog.API.Controllers
         /// <response code="204">Edits comment</response>
         /// <response code="404">If some of the items doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] CommentDto dto)
         {
@@ -144,6 +149,8 @@ namespace Blog.API.Controllers
         /// <response code="204">Deletes one comment by ID</response>
         /// <response code="404">If comment doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

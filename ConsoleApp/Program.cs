@@ -10,32 +10,28 @@ namespace ConsoleApp
         {
             var context = new BlogContext();
 
-            context.Categories.Add(new Category
-            {
-                Name = "Category 1",
-
-            });
-
+            // admin
             context.Users.Add(new User
             {
-              FirstName = "JOhn",
+              FirstName = "John",
               LastName = "Doe",
-              Username = "johndoe3",
+              Username = "admin",
               Password = "pass123",
-              Email = "mail@email.com",
+              Email = "admin@email.com",
               RoleId = 1
             });
 
-            context.Posts.Add(new Post
+            // user
+            context.Users.Add(new User
             {
-
-                Title = "Title 1",
-                Content = "Content",
-                UserId = 1,
-                CategoryId = 1,
+                FirstName = "Jane",
+                LastName = "Doe",
+                Username = "user",
+                Password = "pass123",
+                Email = "user@email.com",
+                RoleId = 2
             });
 
-         
 
             context.SaveChanges();
         }

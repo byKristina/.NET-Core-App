@@ -4,6 +4,7 @@ using Application.Commands.RolesCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
+using Blog.API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -34,6 +35,8 @@ namespace Blog.API.Controllers
         /// </summary>
         /// <response code="200">Returns all roles (that match provided query)</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpGet]
         public ActionResult<IEnumerable<RoleDto>> Get([FromQuery] RoleSearch search)
         {
@@ -49,6 +52,8 @@ namespace Blog.API.Controllers
         /// <response code="200">Gets one role by ID</response>
         /// <response code="404">If role doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
@@ -75,6 +80,8 @@ namespace Blog.API.Controllers
         /// <response code="201">Adds new role</response>
         /// <response code="409">If role already exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpPost]
         public ActionResult Post([FromBody] RoleDto dto)
         {
@@ -101,6 +108,8 @@ namespace Blog.API.Controllers
         /// <response code="404">If role doesn't exist</response>
         /// <response code="409">If role already exists</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] RoleDto dto)
         {
@@ -133,6 +142,8 @@ namespace Blog.API.Controllers
         /// <response code="204">Deletes one role by ID</response>
         /// <response code="404">If role doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

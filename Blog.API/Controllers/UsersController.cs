@@ -4,6 +4,7 @@ using Application.Commands.UsersCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
+using Blog.API.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -34,6 +35,8 @@ namespace Blog.API.Controllers
         /// <response code="200">Returns all users (that match provided query)</response>
         /// <response code="404">If users don't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpGet]
         public ActionResult<IEnumerable<GetUserDto>> Get([FromQuery] UserSearch search)
         {
@@ -60,6 +63,8 @@ namespace Blog.API.Controllers
         /// <response code="200">Gets one user by ID</response>
         /// <response code="404">If user doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
@@ -85,7 +90,7 @@ namespace Blog.API.Controllers
         /// <response code="201">Adds new user</response>
         /// <response code="404">If some of the items don't exist</response>
         /// <response code="409">If user already exists</response>
-        /// <response code="500">If server error occurred</response>
+        /// <response code="500">If server error occurred</response> 
         [HttpPost]
         public ActionResult Post([FromBody] UserDto dto)
         {
@@ -117,6 +122,8 @@ namespace Blog.API.Controllers
         /// <response code="404">If some of the items don't exist</response>
         /// <response code="409">If user already exists</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody]  UserDto dto)
         {
@@ -149,6 +156,8 @@ namespace Blog.API.Controllers
         /// <response code="204">Deletes one user by ID</response>
         /// <response code="404">If user doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

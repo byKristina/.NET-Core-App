@@ -42,7 +42,7 @@ namespace Blog.API.Controllers
         /// </summary>
         /// <response code="200">Returns all categories (that match provided query)</response>
         /// <response code="500">If server error occurred</response>
-        /// <response code="401">If user is not Admin</response>
+        /// <response code="401">Unauthorized</response>
         [LoggedIn("Admin")]
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> Get([FromQuery] CategorySearch search)
@@ -59,6 +59,8 @@ namespace Blog.API.Controllers
         /// <response code="200">Gets one category by ID</response>
         /// <response code="404">If category doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpGet("{id}")]
         public ActionResult Get(int id)
         {
@@ -84,6 +86,8 @@ namespace Blog.API.Controllers
         /// <response code="201">Adds new category</response>
         /// <response code="409">If category already exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpPost]
         public ActionResult Post([FromBody] CategoryDto dto)
         {
@@ -110,7 +114,9 @@ namespace Blog.API.Controllers
         /// <response code="404">If category doesn't exist</response>
         /// <response code="409">If category already exists</response>
         /// <response code="500">If server error occurred</response>
-         [HttpPut("{id}")]
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
+        [HttpPut("{id}")]
         public ActionResult Put(int id, [FromBody] CategoryDto dto)
         {
             dto.Id = id;
@@ -141,6 +147,8 @@ namespace Blog.API.Controllers
         /// <response code="204">Deletes one category by ID</response>
         /// <response code="404">If category doesn't exist</response>
         /// <response code="500">If server error occurred</response>
+        /// <response code="401">Unauthorized</response>
+        [LoggedIn("Admin")]
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
