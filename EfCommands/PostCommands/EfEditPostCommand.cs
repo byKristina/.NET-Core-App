@@ -37,6 +37,7 @@ namespace EfCommands.PostCommands
                 post.ImagePath = request.ImagePath;
             }
 
+
             post.Title = request.Title;
             post.Content = request.Content;
             post.CategoryId = request.CategoryId;

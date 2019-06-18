@@ -35,7 +35,7 @@ namespace EfCommands.PostCommands
 
             Post newPost = new Post
             {
-               
+              
                 Title = request.Title,
                 ImagePath = request.ImagePath,
                 Content = request.Content,

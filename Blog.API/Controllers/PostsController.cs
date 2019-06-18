@@ -7,7 +7,7 @@ using Application.DTO;
 using Application.Exceptions;
 using Application.Helpers;
 using Application.Searches;
-using Microsoft.AspNetCore.Http;
+using Blog.API.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.API.Controllers
@@ -93,7 +93,7 @@ namespace Blog.API.Controllers
         /// <response code="409">If post already exist</response>
         /// <response code="500">If server error occurred</response>
         [HttpPost]
-        public ActionResult Post([FromForm] PostDto dto)
+        public ActionResult Post([FromForm] PostImageDto dto)
         {
 
             var ext = Path.GetExtension(dto.Image.FileName); //.jpg etc.
@@ -122,8 +122,10 @@ namespace Blog.API.Controllers
                      UserId = dto.UserId
                 };
 
-                _addCommand.Execute(post);
-                return StatusCode(201);
+                try
+                {
+                    _addCommand.Execute(post);
+                     return StatusCode(201);
 
                 }
                 catch (EntityAlreadyExistsException e)
@@ -134,8 +136,12 @@ namespace Blog.API.Controllers
                 {
                     return StatusCode(500, "Server error has occurred.");
                 }
-
             }
+            catch (Exception)
+            {
+                return StatusCode(500, "Server error has occurred.");
+            }
+        }
 
         // PUT: api/Posts/5
         /// <summary>
@@ -146,60 +152,59 @@ namespace Blog.API.Controllers
         /// <response code="409">If post already exists</response>
         /// <response code="500">If server error occurred</response>
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromForm] PostDto dto)
+        public ActionResult Put(int id, [FromForm] PostImageDto dto)
         {
             dto.Id = id;
 
+            var ext = Path.GetExtension(dto.Image.FileName); //.jpg etc.
+
+            if (!FileUpload.AllowedExtensions.Contains(ext))
+            {
+                return UnprocessableEntity("Image extension is not allowed.");
+            }
+
+
             try
             {
-                //if image changed 
-                if (dto.Image != null)
+                var newFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
+
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
+
+                dto.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                var post = new PostDto
                 {
-                    var extension = Path.GetExtension(dto.Image.FileName);
+                    Id = dto.Id,
+                    Title = dto.Title,
+                    Content = dto.Content,
+                    ImagePath = newFileName,
+                    CategoryId = dto.CategoryId,
+                    UserId = dto.UserId
+                };
 
-                    if (!FileUpload.AllowedExtensions.Contains(extension))
-                    {
-                        return UnprocessableEntity("Image extension is not allowed.");
-                    }
-
-                    var newFileName = Guid.NewGuid().ToString() + "_" + dto.Image.FileName;
-
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", newFileName);
-
-                    dto.Image.CopyTo(new FileStream(filePath, FileMode.Create));
-
-
-                    var post = new PostDto
-                    {
-                        Id = dto.Id,
-                        Title = dto.Title,
-                        Content = dto.Content,
-                        ImagePath = newFileName,
-                        CategoryId = dto.CategoryId,
-                        UserId = dto.UserId
-                    };
+                try
+                { 
                     _editCommand.Execute(post);
                     return NoContent();
                 }
-                else {
-                   
-                    _editCommand.Execute(dto);
-                    return NoContent();
-                }
-                
-            }
+   
 
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
+                catch (EntityNotFoundException e)
+                {
+                    return NotFound(e.Message);
+                }
+                catch (EntityAlreadyExistsException e)
+                {
+                    return Conflict(e.Message);
+                }
+                catch (Exception e)
+                {
+                    return StatusCode(500, e.Message);
+                }
             }
-            catch (EntityAlreadyExistsException e)
+            catch (Exception)
             {
-                return Conflict(e.Message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, "Server error has occurred.");
             }
         }
 

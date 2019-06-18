@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.DTO
+namespace Blog.API.DTO
 {
-    public class PostDto
+    public class PostImageDto
     {
-
         public int Id { get; set; }
         [Required]
         [MinLength(4, ErrorMessage = "Minimum number of characters is 4")]
@@ -20,11 +20,12 @@ namespace Application.DTO
         public int CategoryId { get; set; }
         [Required]
         public int UserId { get; set; }
-        [Required]
-        public string ImagePath { get; set; }
+
+      //  public string ImagePath { get; set; }
+
+       [Required(ErrorMessage = "Image is required.")]
+        public IFormFile Image { get; set; }
 
         public DateTime PostedOn { get; set; }
-
     }
 }
-
