@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Auth;
 using Application.Commands.CategoriesCommands;
 using Application.DTO;
 using Application.Exceptions;
 using Application.Searches;
+using Blog.API.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,15 +23,19 @@ namespace Blog.API.Controllers
         private readonly IAddCategoryCommand _addCommand;
         private readonly IEditCategoryCommand _editCommand;
         private readonly IDeleteCategoryCommand _deleteCommand;
+        private readonly LoggedUser _user;
 
-        public CategoriesController(IGetCategoriesCommand getCommand, IGetCategoryCommand getOneCommand, IAddCategoryCommand addCommand, IEditCategoryCommand editCommand, IDeleteCategoryCommand deleteCommand)
+        public CategoriesController(IGetCategoriesCommand getCommand, IGetCategoryCommand getOneCommand, IAddCategoryCommand addCommand, IEditCategoryCommand editCommand, IDeleteCategoryCommand deleteCommand, LoggedUser user)
         {
             _getCommand = getCommand;
             _getOneCommand = getOneCommand;
             _addCommand = addCommand;
             _editCommand = editCommand;
             _deleteCommand = deleteCommand;
+            _user = user;
         }
+
+
 
 
 
@@ -39,6 +45,7 @@ namespace Blog.API.Controllers
         /// </summary>
         /// <response code="200">Returns all categories (that match provided query)</response>
         /// <response code="500">If server error occurred</response>
+        [LoggedIn]
         [HttpGet]
         public ActionResult<IEnumerable<CategoryDto>> Get([FromQuery] CategorySearch search)
         {

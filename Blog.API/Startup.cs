@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using Application.Auth;
 using Application.Commands.CategoriesCommands;
 using Application.Commands.CommentsCommands;
 using Application.Commands.PostsCommands;
@@ -8,6 +9,7 @@ using Application.Commands.RolesCommands;
 using Application.Commands.UsersCommands;
 using Application.Interfaces;
 using Blog.API.Email;
+using Blog.API.Helpers;
 using DataAccess;
 using EfCommands.CategoryCommands;
 using EfCommands.CommentCommands;
@@ -16,9 +18,11 @@ using EfCommands.RoleCommands;
 using EfCommands.UserCommands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Blog.API
@@ -70,6 +74,7 @@ namespace Blog.API
             services.AddTransient<IEditCommentCommand, EfEditCommentCommand>();
             services.AddTransient<IDeleteCommentCommand, EfDeleteCommentCommand>();
 
+            //Email 
             var section = Configuration.GetSection("Email");
 
             var sender =
@@ -88,7 +93,39 @@ namespace Blog.API
                 c.IncludeXmlComments(xmlPath);
             });
 
-           
+            //encryption
+
+            var key = Configuration.GetSection("Encryption")["key"];
+
+            var enc = new Encryption(key);
+            services.AddSingleton(enc);
+
+            services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddTransient(s => {
+                var http = s.GetRequiredService<IHttpContextAccessor>();
+                var value = http.HttpContext.Request.Headers["Authorization"].ToString();
+                var encryption = s.GetRequiredService<Encryption>();
+
+                try
+                {
+                    var decodedString = encryption.DecryptString(value);
+                    decodedString = decodedString.Replace("\f", "");
+                  
+  
+                      var user = JsonConvert.DeserializeObject<LoggedUser>(decodedString);
+                    user.IsLogged = true;
+                    return user;
+                }
+                catch (Exception)
+                {
+                    return new LoggedUser
+                    {
+                        IsLogged = false
+                    };
+                }
+            });
+
 
         }
 
