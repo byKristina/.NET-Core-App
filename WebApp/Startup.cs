@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Commands.CategoriesCommands;
 using Application.Commands.CommentsCommands;
+using Application.Commands.PostsCommands;
 using DataAccess;
 using EfCommands.CategoryCommands;
 using EfCommands.CommentCommands;
+using EfCommands.PostCommands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -52,6 +54,12 @@ namespace WebApp
             services.AddTransient<IEditCommentCommand, EfEditCommentCommand>();
             services.AddTransient<IDeleteCommentCommand, EfDeleteCommentCommand>();
             services.AddTransient<IGetAllCommentsCommand, EfGetAllCommentsCommand>();
+
+            services.AddTransient<IGetPostCommand, EfGetPostCommand>();
+            services.AddTransient<IGetPostsCommand, EfGetPostsCommand>();
+            services.AddTransient<IAddPostCommand, EfAddPostCommand>();
+            services.AddTransient<IEditPostCommand, EfEditPostCommand>();
+            services.AddTransient<IDeletePostCommand, EfDeletePostCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

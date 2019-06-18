@@ -158,7 +158,7 @@ namespace WebApp.Controllers
             }
             catch (EntityNotFoundException)
             {
-                TempData["error"] = "Object doesn't exist.";
+                TempData["error"] = "Category doesn't exist.";
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception)
