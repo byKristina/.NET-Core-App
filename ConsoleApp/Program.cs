@@ -10,6 +10,16 @@ namespace ConsoleApp
         {
             var context = new BlogContext();
 
+            context.Roles.Add(new Role
+            {
+               Name = "Admin"
+            });
+   
+            context.Roles.Add(new Role
+            {
+                Name = "User"
+            });
+
             // admin
             context.Users.Add(new User
             {
